@@ -15,7 +15,7 @@ class ShopBookingModel extends Model1
     }
 
     public function secureCheck($iData){
-        $this->db->select("m002_booking.`server_ip`,m002_booking_module.`expire_from`,m002_booking_module.`expire_to`");
+        $this->db->select("m002_booking.`booking_id`,m002_booking.`server_ip`,m002_booking_module.`expire_from`,m002_booking_module.`expire_to`");
         $this->db->join("m002_booking_module",array("m002_booking.booking_id" => "m002_booking_module.booking_id"));
         $this->db->where("module_id",$iData['module_id']);
         $this->db->where("user_id",$iData['user_id']);

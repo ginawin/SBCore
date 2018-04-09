@@ -20,4 +20,10 @@ class ShopPermissionModel extends Model1
         $result = $this->selectOne();
         return $result;
     }
+    
+    public function getListForBooking($iData){
+        $this->db->join("m002_booking_module",array("m001_permission.module_id"=>"m002_booking_module.module_id"));
+        $result = $this->getList($iData,"m001_permission.perm_url");
+        return $result;
+    }
 }

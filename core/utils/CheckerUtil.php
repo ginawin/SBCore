@@ -33,6 +33,19 @@ class CheckerUtil extends Util
         
         //booking check
         $oData = $this->ShopBookingModel->secureCheck($iData);
+        if(isset($oData['booking_id']) && !empty($oData['booking_id'])){
+            $iData = array(
+                "booking_id" => $oData['booking_id']
+            );
+            $result = $this->ShopPermissionModel->getListForBooking($iData);
+            if(!empty($result)){
+                foreach ($result as $key => $val){
+                    $oData['perm_url'][] = $val['perm_url'];
+                }
+            }
+            unset($result);
+            unset($oData['booking_id']);
+        }
         
         return $oData;
     }

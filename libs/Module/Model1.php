@@ -198,7 +198,39 @@ class Model1
         $result = $this->db->doSelect($this->table_name);
         return isset($result[0])?$result[0]:false;
     }
+    public function getList($iData , $select = "*" , $limit = "", $offset = ""){
+        $this->db->select($select);
+        if(!empty($iData)&&SBArray::valid($iData)){
+            foreach ($iData as $keyData => $valueData)
+            {
+                if(is_numeric($keyData)){
+                    $this->db->where($valueData);
+                }else{
+                    $this->db->{SBArray::valid($valueData)?"in":"where"}($keyData,$valueData);
+                }
+            }
+        }
+        // Check Limit Offset Pagination
+        if(!empty($limit))
+        {
+            $this->db->limit($limit);
+            if(!empty($offset)){
+                $this->db->offset($offset);
+            }
+        }
+        $result = $this->select();
+        
+        return $result;
+    }
+    
+    public function getOne($iData , $select = "*"){
+        $result = $this->getList($iData,$select,1);
+        return isset($result[0])?$result[0]:false;
+    }
     public function lastInsertId(){
         return $this->db->lastInsertId();
+    }
+    public function getColumn(){
+        return $this->db->getTableColumns($this->table_name);
     }
 }
