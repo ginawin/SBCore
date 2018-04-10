@@ -14,7 +14,7 @@ class BookingUtil extends Util
         
         $this->loadModel("HotelModel","HotelPriceModel","TourModel","TourPriceModel","BookingModel","BookingTbkModel",
             "BookingHotelModel","BookingHotelToModel", "BookingTourModel","BookingTourDetailsModel","BookingPriceModel",
-            "BookingHistoryModel","HotelCancelationModel","BookingContactModel","CountryQModel","PlaceModel","BookingRqXmlModel");
+            "BookingHistoryModel","HotelCancelationModel","BookingContactModel","CountryQModel","PlaceModel","BookingRqXmlModel","OrdersModel");
     
         $this->loadUtil("HotelUtil","TourUtil");
 
@@ -371,8 +371,17 @@ class BookingUtil extends Util
             }
         }
         
-        $this->_refresh_price($bk_id);
+        $mBKPrice = $this->_refresh_price($bk_id);
 
+        //online booking
+        if(isset($rq_data['user_name']) && !empty($rq_data['user_name']) &&
+            isset($rq_data['user_email']) && !empty($rq_data['user_email']) &&
+            isset($rq_data['user_phone']) && !empty($rq_data['user_phone'])){
+            $iData = array(
+                ''
+            );
+        }
+        
         $data = array(
             'booking_id'=>$bk_id,
             'booking_cd'=>$booking_code,
@@ -384,7 +393,9 @@ class BookingUtil extends Util
             $data["booking_hotel"] = $rsv_hotel;
         if(isset($rsv_tour) && !empty($rsv_tour))
             $data["booking_tour"] = $rsv_tour;
-    
+        
+        
+        
         
         return $data;
     }
@@ -395,7 +406,7 @@ class BookingUtil extends Util
             if (strpos($this->user_info['user_name'],'TBK') !== false) {
                 $isTBK = true;
             }
-            $mHotel = $this->HotelUtil->getDetailMain($rq_data,$isTBK,true);
+            $mHotel = $this->HotelUtil->getDetail($rq_data,$isTBK,true);
             
             if(isset($mHotel['hotel_price_summaries'])&&!empty($mHotel['hotel_price_summaries'])){
                 $price_name = strtolower(trim($mHotel['hotel_price_summaries'][0]['price_name']));
@@ -1100,12 +1111,12 @@ class BookingUtil extends Util
             $rq_data['tour_cd'] = $rq_data['city_cd']."0@@FREETIME";
         }
         
-        $mlist = $this->TourUtil->getDetailMain($rq_data,true);
+        $mlist = $this->TourUtil->getDetail($rq_data,array(),true);
         
         //not register free time tour for city -> SGN0
         if(empty($mlist)&&$rq_data["tour_cd"]=="FREETIME"){
             $rq_data['tour_cd'] = "SGN0@@FREETIME";
-            $mlist = $this->TourUtil->getDetailMain($rq_data,true);
+            $mlist = $this->TourUtil->getDetail($rq_data,array(),true);
             $city_id = $this->PlaceModel->getIdByCode($rq_data['city_cd']);
             $city_cd = $rq_data['city_cd'];
         }else{
@@ -1428,6 +1439,7 @@ class BookingUtil extends Util
                 $this->BookingModel->updateOne($booking_orm);
             }
         }
+        return $booking_orm;
     }
 
     private function _get_LPN_place($tbk_place){

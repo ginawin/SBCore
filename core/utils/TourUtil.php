@@ -178,13 +178,13 @@ class TourUtil extends Util
         return true;
     }
 
-    public function getDetail($rq_data,$rq_user){
+    public function getDetail($rq_data,$rq_user,$BK_FLG = false){
     
         if(!$this->getDetailValid($rq_data)){
             return false;
         }
         
-        $BK_FLG = $rq_data['bk_flg'];
+        //$BK_FLG = $rq_data['bk_flg'];
         $rq_data['tbk_flg'] = false;
     
         $data = false;

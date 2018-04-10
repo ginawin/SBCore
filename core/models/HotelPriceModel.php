@@ -176,9 +176,7 @@ class HotelPriceModel extends Model
         //join T and hotel_policy_benefit
         $from = $from." INNER JOIN ".$sub_query. " ON T.hotel_id = hotel.hotel_id AND T.min_price = hotel_price.hotel_price_twb_ov ".$left_join;
         $query = $select.$from.$where.$group.$order.$limit;
-
         $mHotel = $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-
         return $mHotel;
     }
 

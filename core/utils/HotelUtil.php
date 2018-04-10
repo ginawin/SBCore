@@ -227,7 +227,7 @@ class HotelUtil extends Util
                 if(isset($hotel['hotel_price_trp_ov'])&&!empty($hotel['hotel_price_trp_ov'])){
                     $hotel_price_summary['trp_price'] = ceil($hotel['hotel_price_trp_ov']*$currency_rate);
                 }
-
+                
                 if(isset($rq_data['rq_rooms'])&&!empty($rq_data['rq_rooms'])){
                     $sum_avail_flg = 1;
                     foreach($rq_data['rq_rooms'] as $key=>$rq_room){
