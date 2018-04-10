@@ -16,7 +16,7 @@ class BookingUtil extends Util
             "BookingHotelModel","BookingHotelToModel", "BookingTourModel","BookingTourDetailsModel","BookingPriceModel",
             "BookingHistoryModel","HotelCancelationModel","BookingContactModel","CountryQModel","PlaceModel","BookingRqXmlModel","OrdersModel");
     
-        $this->loadUtil("HotelUtil","TourUtil");
+        $this->loadUtil("HotelUtil","TourUtil","MailUtil");
 
         $this->booking_type = array(
             "booking_hotel_only"
@@ -414,6 +414,16 @@ class BookingUtil extends Util
                     "user_email" => $rq_data['user_email'],
                     "user_phone" => $rq_data['user_phone']
                 );
+                
+                //send mail
+                $email['add'][] = array('name'=>$rq_data['user_name'],'email'=>$rq_data['user_email']);
+                $email['cc'][] = array('name'=>SYSTEM_SUPPORT_NAME,'email'=>SYSTEM_SUPPORT_EMAIL);
+                $email['cc'][] = array('name'=>SYSTEM_RESERVATION_NAME,'email'=>SYSTEM_RESERVATION_EMAIL);
+                $title = "New Booking $booking_code From Online";
+                $content = "New Online Booking: $booking_code";
+                $this->MailUtil->send($email,$title,$content);
+                //send mail
+                
                 return $data;
             }
         }
