@@ -373,14 +373,51 @@ class BookingUtil extends Util
         
         $mBKPrice = $this->_refresh_price($bk_id);
 
-        //online booking
+        //B2C
         if(isset($rq_data['user_name']) && !empty($rq_data['user_name']) &&
             isset($rq_data['user_email']) && !empty($rq_data['user_email']) &&
             isset($rq_data['user_phone']) && !empty($rq_data['user_phone'])){
             $iData = array(
-                ''
+                'orders_catogory_id' => 0,
+                'orders_status' => 1,
+                'orders_date_payment' => SBDate::Now2Int(),
+                'name' => $rq_data['user_name'],
+                'orders_email' => $rq_data['user_email'],
+                'orders_phone' => $rq_data['user_phone'],
+                'orders_category_form' => 99,
+                'price' => '',
+                'price_usd' => isset($mBKPrice['booking_total_amount'])?$mBKPrice['booking_total_amount']:0,
+                'booking_from_agent' => 0,
+                'order_date_airport_1' => '',
+                'order_date_airport_2' => '',
+                'order_date_airport_note' => '',
+                'booking_id' => $bk_id,
+                'booking_code' => $booking_code,
+                'order_date_airport_115' => '',
+                'orders_person' => $rq_data['adult_num'],
+                'orders_note' => '',
+                'orders_restaurant' => '',
+                'orders_spa' => '',
+                'orders_type' => '',
+                'bus_chair' => '',
+                'book_bus_id' => '',
+                'book_pickup_hotel' => '',
+                'date_input' => '',
+                'booking_from_agent_child' => '',
+                'customers_id' => '',
             );
+            if($this->OrdersModel->insertOne($iData)){
+                $data = array(
+                    "orders_id" => $this->db->lastInsertId(),
+                    "total_price" => isset($mBKPrice['booking_total_amount'])?$mBKPrice['booking_total_amount']:0,
+                    "user_name" => $rq_data['user_name'],
+                    "user_email" => $rq_data['user_email'],
+                    "user_phone" => $rq_data['user_phone']
+                );
+                return $data;
+            }
         }
+        //B2C
         
         $data = array(
             'booking_id'=>$bk_id,
@@ -393,9 +430,6 @@ class BookingUtil extends Util
             $data["booking_hotel"] = $rsv_hotel;
         if(isset($rsv_tour) && !empty($rsv_tour))
             $data["booking_tour"] = $rsv_tour;
-        
-        
-        
         
         return $data;
     }
