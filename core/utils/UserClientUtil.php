@@ -39,7 +39,7 @@ class UserClientUtil extends Util
         $temp = array('user_email' => $iData['user_email']);
         
         $oData =  $this->UserClientModel->getOne($temp);
-        if (Password::verify($iData['user_pass'], $oData['user_pass'])) {
+        if (hash("sha256",PASSWORDPREFIX.$iData['user_pass']) == $oData['user_pass']) {
             return $oData;
         }
         return false;
