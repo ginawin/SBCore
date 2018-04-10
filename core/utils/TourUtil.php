@@ -106,8 +106,16 @@ class TourUtil extends Util
             $mSTrf = $this->TourModel->get_trf_price($rq_temp,$select);
 
             foreach($mTour as $key=>$tour){
-
-                $price = $this->__getPrice($tour, $cus_num, $rq_data['car_type'],$currency_rate);
+    
+                $price = 0;
+                $price_prc = 0;
+    
+                if($rq_data['car_type']==""){
+                    $price = $this->__getPrice($tour, $cus_num, 0,$currency_rate);
+                    $price_prc = $this->__getPrice($tour, $cus_num, 1,$currency_rate);
+                }else{
+                    $price = $this->__getPrice($tour, $cus_num, $rq_data['car_type'],$currency_rate);
+                }
 
                 $tour_key = substr($tour['tour_code'],3,1);
 
@@ -123,7 +131,19 @@ class TourUtil extends Util
                         }
                     }
                 }
-
+    
+                if(isset($rq_data['flg']) && $rq_data['flg'] == 1){
+                    if($rq_data['car_type']===""){
+                        if($price == 0 && $price_prc == 0){
+                            continue;
+                        }
+                    }else{
+                        if($price == 0){
+                            continue;
+                        }
+                    }
+                }
+                
                 $data[$key]['tour_cd'] = $tour['tour_code'];
                 $data[$key]['city_cd'] = $tour['place_code'];
                 $data[$key]['tour_name'] = $tour['tour_price_name_en'];
@@ -140,6 +160,8 @@ class TourUtil extends Util
                 $data[$key]['adult_num'] = $rq_data['adult_num'];
                 $data[$key]['child_num'] = $rq_data['child_num'];
                 $data[$key]['infant_num'] = $rq_data['infant_num'];
+                
+                
                 if($rq_data['car_type']===""){
                     $data[$key]['tour_price_summaries'] = array();
                     $data[$key]['tour_price_summaries'][0] = array(
@@ -319,6 +341,18 @@ class TourUtil extends Util
                                 $price += $this->__getPrice($mSTrf[0], $cus_num, $rq_data['car_type'],$currency_rate);
                             }
                         }
+                    }
+                }
+            }
+    
+            if(isset($rq_data['flg']) && $rq_data['flg'] == 1){
+                if($rq_data['car_type']===""){
+                    if($price == 0 && $price_prc == 0){
+                        return false;
+                    }
+                }else{
+                    if($price == 0){
+                        return false;
                     }
                 }
             }

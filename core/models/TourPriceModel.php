@@ -37,7 +37,8 @@ class TourPriceModel extends Model
         $this->db->join('tour_detail',array('tour_price.tour_price_id'=>'tour_detail.tour_price_id'),'','LEFT');
         $this->db->groupby('tour_price.tour_id');
         $this->db->where('(tour_price.tour_price <> 0 OR tour_price.tour_price_prc <> 0)');
-
-        return $this->select();
+        
+        $result = $this->select();
+        return $result;
     }
 }
