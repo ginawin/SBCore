@@ -5,8 +5,6 @@
  * Date: 4/10/2018
  * Time: 3:26 PM
  */
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 class MailUtil extends Util
 {
@@ -50,13 +48,11 @@ class MailUtil extends Util
         }
     
         // Config <> array  và config <> null => return false; (Config <> null because Config = Config default)
-        if(is_array($config) && !$config === null){
+        if(is_array($config) && !$config === null) {
             return false;
         }
     
-        require_once CORE_DOCROOT.'vendor/PHPMailer/src/Exception.php';
-        require_once CORE_DOCROOT.'vendor/PHPMailer/src/PHPMailer.php';
-        require_once CORE_DOCROOT.'vendor/PHPMailer/src/SMTP.php';
+        require CORE_DOCROOT."vendor/PHPMailer/PHPMailerAutoload.php";
         
         $mail = new PHPMailer(true);
         try {
