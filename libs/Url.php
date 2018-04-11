@@ -315,7 +315,7 @@ class Url
             $path_info = $_SERVER['ORIG_PATH_INFO'];
         }
         if(!empty($path_info)){
-            $path = parse_url($path_info, PHP_URL_PATH);
+            $path = strtolower(parse_url($path_info, PHP_URL_PATH));
             return !empty($path)?trim($path,"/"):"/";
         }
         return "/";
