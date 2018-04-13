@@ -1653,5 +1653,20 @@ class BookingUtil extends Util
         }
         return false;
     }
+    
+    public function getList(){
+    
+        $memc = new Memcache;
+        $memc->connect('localhost', 11211) or die ("Could not connect");
+    
+        //$mfilms = $memc->get('test');
+        $mfilms = false;
+        if (empty($mfilms)) {
+            $sql = "SELECT * FROM booking LIMIT 0, 10000";
+            $mfilms = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            $memc->set('test', $mfilms);
+        }
+        return $mfilms;
+    }
 
 }

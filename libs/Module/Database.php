@@ -1105,15 +1105,10 @@ class Database extends PDO
                     break;
 
             }*/
-
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
             if(empty($result))
-
                 $result = true;
-
         }
-
         return $result;
 
     }

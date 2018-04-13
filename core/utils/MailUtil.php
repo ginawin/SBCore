@@ -41,6 +41,7 @@ class MailUtil extends Util
      * @return boolean
      */
     public function send($email,$title,$content,$config = null,$file = null){
+        
         // Email, Title, Content null OR Email <> array() => return false;
         if(empty($email)||empty($title)||empty($content)||!is_array($email))
         {
@@ -52,7 +53,7 @@ class MailUtil extends Util
             return false;
         }
     
-        require CORE_DOCROOT."vendor/PHPMailer/PHPMailerAutoload.php";
+        App::loadFile(CORE_DOCROOT."vendor/PHPMailer/PHPMailerAutoload.php");
         
         $mail = new PHPMailer(true);
         try {
