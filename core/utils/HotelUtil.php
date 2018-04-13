@@ -510,7 +510,8 @@ class HotelUtil extends Util
         
             $cus_num = 0;
             if(isset($rq_data['rq_rooms'])&&!empty($rq_data['rq_rooms'])){
-                $rq_data['rq_rooms'] = json_decode($rq_data['rq_rooms'],true);
+                if(!SBArray::valid($rq_data['rq_rooms']))
+                    $rq_data['rq_rooms'] = json_decode($rq_data['rq_rooms'],true);
                 if(!empty($rq_data['rq_rooms'])){
                     foreach($rq_data['rq_rooms'] as $rq_room){
                         $cus_num += $rq_room['adult_num'];
