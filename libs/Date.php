@@ -14,4 +14,7 @@ class Date
         $create_time = $today->format($format);
         return $create_time;
     }
+    public function test() {
+        
+    }
 }
